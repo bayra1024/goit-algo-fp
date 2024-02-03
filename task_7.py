@@ -61,3 +61,12 @@ plt.xlabel("Сума")
 plt.ylabel("Імовірність, %")
 plt.legend()
 plt.show()
+
+
+print("Імовірності (Метод Монте-Карло):")
+for key, value in monte_carlo_probabilities.items():
+    print(f"{key}\t{value:.2f}%")
+
+print("\nАналітичні імовірності:")
+for key, value in analytical_probabilities.items():
+    print(f"{key}\t{value:.2f}%")

@@ -1,5 +1,5 @@
 import uuid
-
+import heapq
 import networkx as nx
 import matplotlib.pyplot as plt
 
@@ -11,6 +11,24 @@ class Node:
         self.val = key
         self.color = color
         self.id = str(uuid.uuid4())
+
+    def __lt__(self, other):
+        return self.val < other.val
+
+    def __gt__(self, other):
+        return self.val > other.val
+
+    def __eq__(self, other):
+        return self.val == other.val
+
+    def __ne__(self, other):
+        return self.val != other.val
+
+    def __le__(self, other):
+        return self.val <= other.val
+
+    def __ge__(self, other):
+        return self.val >= other.val
 
 
 def add_edges(graph, node, pos, x=0, y=0, layer=1):
@@ -92,8 +110,8 @@ def generate_color(index):
     return f"#{hex_color}"
 
 
-heap = [Node(1), Node(2), Node(3), Node(4), Node(5), Node(6), Node(10)]
-
+heap = [Node(6), Node(3), Node(10), Node(1), Node(5), Node(2), Node(4)]
+heapq.heapify(heap)
 heap_root = build_heap(heap)
 
 fig, axs = plt.subplots(1, 2, figsize=(15, 5))

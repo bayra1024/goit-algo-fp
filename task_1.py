@@ -4,110 +4,121 @@ class Node:
         self.next = None
 
 
-def print_linked_list(head):
-    current = head
-    while current is not None:
-        print(current.data, end=" -> ")
-        current = current.next
-    print("None")
+class LinkedList:
+    def __init__(self):
+        self.head = None
 
-
-def reverse_linked_list(head):
-    prev = None
-    current = head
-
-    while current is not None:
-        next_node = current.next
-        current.next = prev
-        prev = current
-        current = next_node
-
-    return prev
-
-
-def insertion_sort_linked_list(head):
-    if head is None or head.next is None:
-        return head
-
-    sorted_head = None
-    current = head
-
-    while current is not None:
-        next_node = current.next
-        sorted_head = insert_node_sorted(sorted_head, current)
-        current = next_node
-
-    return sorted_head
-
-
-def insert_node_sorted(sorted_head, new_node):
-    if sorted_head is None or new_node.data < sorted_head.data:
-        new_node.next = sorted_head
-        return new_node
-
-    current = sorted_head
-    while current.next is not None and current.next.data < new_node.data:
-        current = current.next
-
-    new_node.next = current.next
-    current.next = new_node
-
-    return sorted_head
-
-
-def merge_sorted_lists(list1, list2):
-    dummy = Node(0)
-    current = dummy
-
-    while list1 is not None and list2 is not None:
-        if list1.data < list2.data:
-            current.next = list1
-            list1 = list1.next
+    def append(self, data):
+        new_node = Node(data)
+        if self.head is None:
+            self.head = new_node
         else:
-            current.next = list2
-            list2 = list2.next
+            current = self.head
+            while current.next is not None:
+                current = current.next
+            current.next = new_node
 
-        current = current.next
+    def reverse(self):
+        prev = None
+        current = self.head
 
-    if list1 is not None:
-        current.next = list1
-    else:
-        current.next = list2
+        while current is not None:
+            next_node = current.next
+            current.next = prev
+            prev = current
+            current = next_node
 
-    return dummy.next
+        self.head = prev
+
+    def insertion_sort(self):
+        if self.head is None or self.head.next is None:
+            return
+
+        sorted_head = None
+        current = self.head
+
+        while current is not None:
+            next_node = current.next
+            sorted_head = self._insert_into_sorted(sorted_head, current)
+            current = next_node
+
+        self.head = sorted_head
+
+    def _insert_into_sorted(self, sorted_head, new_node):
+        if sorted_head is None or new_node.data <= sorted_head.data:
+            new_node.next = sorted_head
+            return new_node
+
+        current = sorted_head
+
+        while current.next is not None and new_node.data > current.next.data:
+            current = current.next
+
+        new_node.next = current.next
+        current.next = new_node
+
+        return sorted_head
+
+    def merge_sorted_lists(self, other_list):
+        self.insertion_sort()
+        other_list.insertion_sort()
+        dummy = Node(0)
+        current = dummy
+
+        current1 = self.head
+        current2 = other_list.head
+
+        while current1 is not None and current2 is not None:
+            if current1.data < current2.data:
+                current.next = current1
+                current1 = current1.next
+            else:
+                current.next = current2
+                current2 = current2.next
+
+            current = current.next
+
+        if current1 is not None:
+            current.next = current1
+        elif current2 is not None:
+            current.next = current2
+
+        self.head = dummy.next
+
+    def display(self):
+        current = self.head
+        while current is not None:
+            print(current.data, end=" -> ")
+            current = current.next
+        print("None")
 
 
-list1 = Node(3)
-list1.next = Node(7)
-list1.next.next = Node(10)
+list1 = LinkedList()
+list1.append(10)
+list1.append(1)
+list1.append(5)
 
-list2 = Node(1)
-list2.next = Node(5)
-list2.next.next = Node(8)
+list2 = LinkedList()
+list2.append(6)
+list2.append(3)
+list2.append(7)
 
+print("\nПерший відсортований список:")
+list1.insertion_sort()
+list1.display()
 
-print("Original List 1:")
-print_linked_list(list1)
+list1.reverse()
+print("\nПерший список після реверсування:")
+list1.display()
 
-print("\nOriginal List 2:")
-print_linked_list(list2)
+print("\nДругий відсортований список:")
+list2.insertion_sort()
+list2.display()
 
+list2.reverse()
+print("\nДругий список після реверсування:")
+list2.display()
 
-reversed_list1 = reverse_linked_list(list1)
-print("\nReversed List 1:")
-print_linked_list(reversed_list1)
-
-
-sorted_list2 = insertion_sort_linked_list(list2)
-print("\nSorted List 2:")
-print_linked_list(sorted_list2)
-
-
-def main():
-    merged_list = merge_sorted_lists(reversed_list1, sorted_list2)
-    print("\nMerged List:")
-    print_linked_list(merged_list)
-
-
-if __name__ == "__main__":
-    main()
+list1.merge_sorted_lists(list2)
+print("\nОб'єднаний відсортований список:")
+list1.display()
